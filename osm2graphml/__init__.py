@@ -10,7 +10,7 @@ http://github.com/bmander/graphserver/tree/master and is copyright (c)
 import xml.sax
 import copy
 import networkx
-
+import math
 
 def download_osm(left,bottom,right,top):
     """ Return a filehandle to the downloaded data."""
@@ -155,6 +155,19 @@ class OSM:
                 new_ways[split_way.id] = split_way
         self.ways = new_ways
 
+def distance(origin, destination):
+    lat1, lon1 = origin
+    lat2, lon2 = destination
+    radius = 6371 # km
+
+    dlat = math.radians(lat2-lat1)
+    dlon = math.radians(lon2-lon1)
+    a = math.sin(dlat/2) * math.sin(dlat/2) + math.cos(math.radians(lat1)) \
+        * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    d = radius * c
+
+    return d
 
 def main():
     # osm = download_osm(-9.8192, 31.4884, -9.7320, 31.5343)
@@ -171,13 +184,23 @@ def main():
 
     for n in g:
         data = g.node[n]['data']
-        print '<node id="%s" >' % (n)
-        print '<data key="lat"> %s </data>' % (data.lat)
-        print '<data key="lon"> %s </data>' % (data.lon)
+        print '<node id="%s" >' % n
+        print '<data key="lat"> %s </data>' % data.lat
+        print '<data key="lon"> %s </data>' % data.lon
         print '</node>'
 
     for source, target, data in g.edges(data=True):
-        print '<edge source="%s" target="%s" />' % (source, target)
+        print '<edge source="%s" target="%s">' % (source, target)
+        p1 = g.node[source]['data']
+        p2 = g.node[target]['data']
+        
+        x1 = float(p1.lat)
+        x2 = float(p2.lat)
+        y1 = float(p1.lon)
+        y2 = float(p2.lon)
+        
+        print '<data key="distance"> %s </data>' % (distance((x1, y1), (x2, y2)) * 1000)
+        print '</edge>'
 
     print """
         </graph>
