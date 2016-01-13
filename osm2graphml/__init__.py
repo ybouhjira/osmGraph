@@ -159,11 +159,12 @@ class OSM:
 def main():
     # osm = download_osm(-9.8192, 31.4884, -9.7320, 31.5343)
     g = read_osm('/home/youssef/Desktop/essaouira.osm')
-    # for n in g.node:
-    # plot([G.node[n]['data'].lat for n in G], [G.node[n]['data'].lon for n in G], ',')
     for n in g:
         data = g.node[n]['data']
-        print "[%s, %s]," % (data.lat, data.lon)
+        print '<node id="%s" >' % (n)
+        print '<data key="lat" value="%s" />' % (data.lat)
+        print '<data key="lon" value="%s" />' % (data.lon)
+        print '</node>'
 
 if __name__ == "__main__":
     main()
