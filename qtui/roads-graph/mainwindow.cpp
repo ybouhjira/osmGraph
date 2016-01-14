@@ -7,6 +7,8 @@
 #include <QWebFrame>
 #include <cstdio>
 #include <sstream>
+#include <QFileDialog>
+#include <QFile>
 
 #include <boost/graph/graphml.hpp>
 
@@ -26,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(_ui->actionZone_OSM, &QAction::triggered,
             this, &MainWindow::showOsmDialog);
+    connect(_ui->actionGraphML, &QAction::triggered,
+            this, &MainWindow::openGraphMl);
 }
 
 MainWindow::~MainWindow()
@@ -49,9 +53,18 @@ void MainWindow::showOsmDialog()
             strStream << buffer;
 
         pclose(fp);
-        std::string xml = strStream.str();
+        m_xml = strStream.str().c_str();
+    }
+}
 
-        boost::adjacency_list<> graph;
-        boost::read_graphml(std::istringstream(xml) ,graph);
+void MainWindow::openGraphMl()
+{
+    auto path = QFileDialog::getOpenFileName(this, "GraphML", "", "*.graphml");
+    QFile file(path);
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        m_xml = file.readAll().toStdString().c_str();
+    } else {
+        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier");
     }
 }

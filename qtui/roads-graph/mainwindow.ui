@@ -45,9 +45,10 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="actionZone_OSM"/>
+   <addaction name="actionGraphML"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionZone_OSM">
@@ -56,6 +57,14 @@
    </property>
    <property name="toolTip">
     <string>Créer un graphe à pratir du OSM d'une zone</string>
+   </property>
+  </action>
+  <action name="actionGraphML">
+   <property name="text">
+    <string>GraphML</string>
+   </property>
+   <property name="toolTip">
+    <string>Ouvrir fichier GraphML</string>
    </property>
   </action>
  </widget>

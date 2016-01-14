@@ -17,9 +17,11 @@ public:
 
 public slots:
     void showOsmDialog();
+    void openGraphMl();
 
 private:
     Ui::MainWindow *_ui;
+    QString m_xml;
 };
 
 #endif // MAINWINDOW_H
