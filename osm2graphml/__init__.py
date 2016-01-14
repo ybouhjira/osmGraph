@@ -180,6 +180,10 @@ def main():
                  xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
                  http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
           <graph id="G" edgedefault="undirected">
+
+          <key id="lat" for="node" attr.name="lat" attr.type="double"/>
+          <key id="lon" for="node" attr.name="lon" attr.type="double"/>
+          <key id="distance" for="edge" attr.name="distance" attr.type="double"/>
           """
 
     for n in g:
