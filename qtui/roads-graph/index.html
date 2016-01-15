@@ -14,10 +14,15 @@
   var lines = [];
 
   function insertMarker(pos) {
-    markers.push(new google.maps.Marker({
+    markers.push(new google.maps.Circle({
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#00FF00',
+      fillOpacity: 0.35,
       map: map,
-      position: pos,
-      title: 'Hello World!'
+      center: pos,
+      radius: 5
     }));
   }
 
@@ -35,8 +40,8 @@
   }
 
   function centerMap() {
-    map.setCenter(markers[0].getPosition());
-    map.setZoom(10);
+    map.setCenter(markers[0].getCenter());
+    map.setZoom(20);
   }
 
   function initMap() {

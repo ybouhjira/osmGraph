@@ -53,6 +53,21 @@ std::pair<double, double> coords_from_string(const std::string &str)
 
     return std::make_pair(lat, lon);
 }
+typedef std::pair<std::string, std::string> StringPair;
+
+StringPair str_coords_from_string(const std::string &str)
+{
+    QString qstr(str.c_str());
+    QStringList parts = qstr.split(",");
+
+    auto it = parts.begin();
+
+    auto lat = it->trimmed().toStdString();
+    it++;
+    auto lon = it->trimmed().toStdString();
+
+    return std::make_pair(lat, lon);
+}
 
 
 void MainWindow::readGraphML()
