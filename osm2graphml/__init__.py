@@ -173,12 +173,16 @@ def main():
     # osm = download_osm(-9.8192, 31.4884, -9.7320, 31.5343)
     g = read_osm('/home/youssef/Desktop/essaouira.osm')
     
-    print """<?xml version="1.0"?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
-<graph id="G" edgedefault="undirected" />
-
-<key id="d0" for="node" attr.name="name" attr.type="string">
-<key id="d1" for="edge" attr.name="weight" attr.type="string">
+    print """<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+    http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+    
+    <key id="d0" for="node" attr.name="name" attr.type="string"/>
+    <key id="d1" for="edge" attr.name="weight" attr.type="string"/>
+    
+    <graph id="Graph" edgedefault="undirected">
 """
 
     for n in g:

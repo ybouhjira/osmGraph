@@ -52,7 +52,7 @@ void MainWindow::readGraphML()
             boost::vecS,
             boost::undirectedS,
             boost::property<boost::vertex_name_t, std::string>,
-            boost::property <boost::edge_weight_t, double>> Graph;
+            boost::property <boost::edge_weight_t, std::string>> Graph;
 
     std::istringstream xmlStrStream(m_xml.toStdString());
     Graph graph;
@@ -62,10 +62,19 @@ void MainWindow::readGraphML()
 
     boost::read_graphml(xmlStrStream, graph, dynamicProps);
 
-    auto vertices = boost::vertices(graph);
-    for (auto it = vertices.first; it != vertices.second; it++) {
-        auto pos = boost::get(boost::vertex_name, graph, *it);
-        QMessageBox::information(this, "pos", pos.c_str());
+//    auto vertices = boost::vertices(graph);
+//    for (auto it = vertices.first; it != vertices.second; it++) {
+//        auto pos = boost::get(boost::vertex_name, graph, *it);
+//        QMessageBox::warning(this, "pos", pos.c_str());
+//    }
+
+
+    auto edges = boost::edges(graph);
+
+    std::cout << "count : " << std::distance(edges.first, edges.second) << std::endl;
+    for (auto it = edges.first; it != edges.second; it++) {
+        auto weight = boost::get(boost::edge_weight, graph, *it);
+        std::cout << weight << std::endl;
     }
 }
 
