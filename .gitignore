@@ -1,2 +1,3 @@
 .idea/
 qtui/build-*/
+*.pro.user

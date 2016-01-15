@@ -173,24 +173,18 @@ def main():
     # osm = download_osm(-9.8192, 31.4884, -9.7320, 31.5343)
     g = read_osm('/home/youssef/Desktop/essaouira.osm')
     
-    print """
-          <?xml version="1.0" encoding="UTF-8"?>
-          <graphml xmlns="http://graphml.graphdrawing.org/xmlns"  
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
-                 http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
-          <graph id="G" edgedefault="undirected">
+    print """<?xml version="1.0"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+<graph id="G" edgedefault="undirected" />
 
-          <key id="lat" for="node" attr.name="lat" attr.type="double"/>
-          <key id="lon" for="node" attr.name="lon" attr.type="double"/>
-          <key id="distance" for="edge" attr.name="distance" attr.type="double"/>
-          """
+<key id="d0" for="node" attr.name="name" attr.type="string">
+<key id="d1" for="edge" attr.name="weight" attr.type="string">
+"""
 
     for n in g:
         data = g.node[n]['data']
         print '<node id="%s" >' % n
-        print '<data key="lat"> %s </data>' % data.lat
-        print '<data key="lon"> %s </data>' % data.lon
+        print '<data key="d0"> %s , %s </data>' % (data.lat, data.lon)
         print '</node>'
 
     for source, target, data in g.edges(data=True):
@@ -203,12 +197,12 @@ def main():
         y1 = float(p1.lon)
         y2 = float(p2.lon)
         
-        print '<data key="distance"> %s </data>' % (distance((x1, y1), (x2, y2)) * 1000)
+        print '<data key="d1"> %s </data>' % (distance((x1, y1), (x2, y2)) * 1000)
         print '</edge>'
 
     print """
-        </graph>
-      </graphml>
+</graph>
+</graphml>
     """
 
 if __name__ == "__main__":

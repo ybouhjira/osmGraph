@@ -29,3 +29,5 @@ RESOURCES += \
     res.qrc
 
 CONFIG += c++11
+
+LIBS += -lboost_system -lboost_graph
