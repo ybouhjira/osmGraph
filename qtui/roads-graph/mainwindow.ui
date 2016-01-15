@@ -50,6 +50,7 @@
    <addaction name="actionZone_OSM"/>
    <addaction name="actionGraphML"/>
    <addaction name="actionKruskal"/>
+   <addaction name="actionDijkstra"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionZone_OSM">
@@ -71,6 +72,11 @@
   <action name="actionKruskal">
    <property name="text">
     <string>Kruskal</string>
+   </property>
+  </action>
+  <action name="actionDijkstra">
+   <property name="text">
+    <string>Dijkstra</string>
    </property>
   </action>
  </widget>

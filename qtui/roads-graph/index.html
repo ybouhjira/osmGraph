@@ -26,13 +26,17 @@
     }));
   }
 
-  function insertLine(line, color) {
+  function insertLine(line, color, weight, opacity) {
+    var color = color || 'red';
+    var weight = weight || 2;
+    var opacity = opacity || 0.5;
+
     var flightPath = new google.maps.Polyline({
       path: line,
       geodesic: true,
       strokeColor: color || '#FF0000',
-      strokeOpacity: color ? 1 : 0.5,
-      strokeWeight: color ? 5 : 2
+      strokeOpacity: opacity,
+      strokeWeight: weight,
     });
 
     lines.push(flightPath);
@@ -40,8 +44,8 @@
   }
 
   function centerMap() {
-    map.setCenter(markers[0].getCenter());
-    map.setZoom(20);
+    map.setCenter(markers[markers.length / 2].getCenter());
+    map.setZoom(9);
   }
 
   function clearLines() {
@@ -53,9 +57,32 @@
   }
 
   function initMap() {
+    var styleArray = [
+      {
+        featureType: "all",
+        stylers: [
+         { saturation: -80 }
+        ]
+      },{
+        featureType: "road.arterial",
+        elementType: "geometry",
+        stylers: [
+          { hue: "#00ffee" },
+          { saturation: 50 }
+        ]
+      },{
+        featureType: "poi.business",
+        elementType: "labels",
+        stylers: [
+          { visibility: "off" }
+        ]
+      }
+    ];
+
     map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -34.397, lng: 150.644},
       scrollwheel: false,
+      styles: styleArray,
       zoom: 8
     });
   }
