@@ -11,6 +11,7 @@
 <script>
   var map;
   var markers = [];
+  var lines = [];
 
   function insertMarker(pos) {
     markers.push(new google.maps.Marker({
@@ -18,6 +19,24 @@
       position: pos,
       title: 'Hello World!'
     }));
+  }
+
+  function insertLine(line) {
+    var flightPath = new google.maps.Polyline({
+      path: line,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1,
+      strokeWeight: 2
+    });
+
+    lines.push(flightPath);
+    flightPath.setMap(map);
+  }
+
+  function centerMap() {
+    map.setCenter(markers[0].getPosition());
+    map.setZoom(10);
   }
 
   function initMap() {

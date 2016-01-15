@@ -40,11 +40,20 @@ MainWindow::~MainWindow()
     delete _ui;
 }
 
-//struct VertexInfo
-//{
-//    double lat;
-//    double lon;
-//};
+std::pair<double, double> coords_from_string(const std::string &str)
+{
+    QString qstr(str.c_str());
+    QStringList parts = qstr.split(",");
+
+    auto it = parts.begin();
+
+    double lat = it->trimmed().toDouble();
+    it++;
+    double lon = it->trimmed().toDouble();
+
+    return std::make_pair(lat, lon);
+}
+
 
 void MainWindow::readGraphML()
 {
@@ -66,14 +75,12 @@ void MainWindow::readGraphML()
     std::cout << "Hello " << std::endl;
     auto vertices = boost::vertices(graph);
 
-    std::cout << std::distance(vertices.first, vertices.second)
-              << " vertices read."
-              << std::endl;
     for (auto it = vertices.first; it != vertices.second; it++) {
         auto pos = boost::get(boost::vertex_name, graph, *it);
-
+        double lat, lng;
+        std::tie(lat, lng) = coords_from_string(pos);
         std::ostringstream jsOut;
-        jsOut << "insertMarker(" << pos << ")" << std::endl;
+        jsOut << "insertMarker({lat:" << lat <<", " << "lng : " << lng<<"})";
         auto js = QString(jsOut.str().c_str());
         std::cout << js.toStdString() << std::endl;
         _ui
@@ -82,6 +89,42 @@ void MainWindow::readGraphML()
             ->mainFrame()
             ->evaluateJavaScript(js);
     }
+
+
+    auto edges = boost::edges(graph);
+
+    for (auto it = edges.first; it != edges.second; it++) {
+        auto source = boost::source(*it, graph);
+        auto target = boost::target(*it, graph);
+
+        auto sourcePos = boost::get(boost::vertex_name, graph, source);
+        auto targetPos = boost::get(boost::vertex_name, graph, target);
+
+        auto sourceLatLng = coords_from_string(sourcePos);
+        auto targetLatLng = coords_from_string(targetPos);
+
+        std::ostringstream jsOut;
+        jsOut << "insertLine("
+              << "["
+              << "  {lat: " << sourceLatLng.first
+              << ", lng: " << sourceLatLng.second << "},"
+              << "  {lat: " << targetLatLng.first
+              << ", lng: " << targetLatLng.second << "}"
+              << "])";
+        auto js = QString(jsOut.str().c_str());
+        std::cout << js.toStdString() << std::endl;
+        _ui
+            ->webView
+            ->page()
+            ->mainFrame()
+            ->evaluateJavaScript(js);
+    }
+
+    _ui
+        ->webView
+        ->page()
+        ->mainFrame()
+        ->evaluateJavaScript("centerMap()");
 }
 
 

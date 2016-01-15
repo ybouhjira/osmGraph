@@ -188,7 +188,7 @@ def main():
     for n in g:
         data = g.node[n]['data']
         print '<node id="%s" >' % n
-        print '<data key="d0"> {lat : %s , lng:%s } </data>' % (data.lat, data.lon)
+        print '<data key="d0"> %.5f , %.5f </data>' % (data.lat, data.lon)
         print '</node>'
 
     for source, target, data in g.edges(data=True):
@@ -201,7 +201,7 @@ def main():
         y1 = float(p1.lon)
         y2 = float(p2.lon)
         
-        print '<data key="d1"> %s </data>' % (distance((x1, y1), (x2, y2)) * 1000)
+        print '<data key="d1"> %.5f </data>' % (distance((x1, y1), (x2, y2)) * 1000)
         print '</edge>'
 
     print """
