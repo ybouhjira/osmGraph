@@ -21,6 +21,7 @@ public:
      */
     void readGraphML();
 
+    void kruskal();
 public slots:
     void showOsmDialog();
     void openGraphMl();

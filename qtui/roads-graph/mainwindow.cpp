@@ -12,6 +12,7 @@
 #include <QFile>
 #include <sstream>
 #include <qdebug.h>
+#include <boost/graph/kruskal_min_spanning_tree.hpp>
 
 #include <boost/graph/graphml.hpp>
 
@@ -33,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, &MainWindow::showOsmDialog);
     connect(_ui->actionGraphML, &QAction::triggered,
             this, &MainWindow::openGraphMl);
+    connect(_ui->actionKruskal, &QAction::triggered,
+            this, &MainWindow::kruskal);
 }
 
 MainWindow::~MainWindow()
@@ -87,7 +90,6 @@ void MainWindow::readGraphML()
 
     boost::read_graphml(xmlStrStream, graph, dynamicProps);
 
-    std::cout << "Hello " << std::endl;
     auto vertices = boost::vertices(graph);
 
     for (auto it = vertices.first; it != vertices.second; it++) {
@@ -99,10 +101,10 @@ void MainWindow::readGraphML()
         auto js = QString(jsOut.str().c_str());
         std::cout << js.toStdString() << std::endl;
         _ui
-            ->webView
-            ->page()
-            ->mainFrame()
-            ->evaluateJavaScript(js);
+                ->webView
+                ->page()
+                ->mainFrame()
+                ->evaluateJavaScript(js);
     }
 
 
@@ -129,17 +131,17 @@ void MainWindow::readGraphML()
         auto js = QString(jsOut.str().c_str());
         std::cout << js.toStdString() << std::endl;
         _ui
-            ->webView
-            ->page()
-            ->mainFrame()
-            ->evaluateJavaScript(js);
+                ->webView
+                ->page()
+                ->mainFrame()
+                ->evaluateJavaScript(js);
     }
 
     _ui
-        ->webView
-        ->page()
-        ->mainFrame()
-        ->evaluateJavaScript("centerMap()");
+            ->webView
+            ->page()
+            ->mainFrame()
+            ->evaluateJavaScript("centerMap()");
 }
 
 
@@ -173,5 +175,91 @@ void MainWindow::openGraphMl()
 
     } else {
         QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier");
+    }
+}
+
+void MainWindow::kruskal()
+{
+    typedef boost::adjacency_list
+            <boost::vecS, boost::vecS, boost::undirectedS,
+            boost::property<boost::vertex_name_t, std::string>,
+            boost::property <boost::edge_weight_t, double>> Graph;
+    typedef Graph::edge_descriptor Edge;
+
+    Graph graph;
+    std::istringstream xmlStrStream(m_xml.toStdString());
+    boost::dynamic_properties dynamicProps;
+    dynamicProps.property("weight", boost::get(boost::edge_weight, graph));
+    dynamicProps.property("name", boost::get(boost::vertex_name, graph));
+
+    try {
+        boost::read_graphml(xmlStrStream, graph, dynamicProps);
+        std::vector<Edge> spanning_tree;
+
+        boost::kruskal_minimum_spanning_tree(graph, std::back_inserter(
+                                                 spanning_tree));
+
+
+        auto vertices = boost::vertices(graph);
+
+        for (auto it = vertices.first; it != vertices.second; it++) {
+            auto pos = boost::get(boost::vertex_name, graph, *it);
+            double lat, lng;
+            std::tie(lat, lng) = coords_from_string(pos);
+            std::ostringstream jsOut;
+            jsOut << "insertMarker({lat:" << lat <<", " << "lng : " << lng<<"})";
+            auto js = QString(jsOut.str().c_str());
+            std::cout << js.toStdString() << std::endl;
+            _ui
+                    ->webView
+                    ->page()
+                    ->mainFrame()
+                    ->evaluateJavaScript(js);
+        }
+
+
+        auto edges = boost::edges(graph);
+        std::cout << "count kruskal : "
+                  << std::distance(edges.first, edges.second)
+                  << std::endl;
+
+        //_ui->webView->page()->mainFrame()->evaluateJavaScript("clearLines()");
+        for (auto it = spanning_tree.begin(); it != spanning_tree.end(); it++) {
+            auto source = boost::source(*it, graph);
+            auto target = boost::target(*it, graph);
+
+            auto sourcePos = boost::get(boost::vertex_name, graph, source);
+            auto targetPos = boost::get(boost::vertex_name, graph, target);
+
+            auto sourceLatLng = coords_from_string(sourcePos);
+            auto targetLatLng = coords_from_string(targetPos);
+
+            std::ostringstream jsOut;
+            jsOut << "insertLine("
+                  << "["
+                  << "  {lat: " << sourceLatLng.first
+                  << ", lng: " << sourceLatLng.second << "},"
+                  << "  {lat: " << targetLatLng.first
+                  << ", lng: " << targetLatLng.second << "}"
+                  << "], '#00F')";
+            auto js = QString(jsOut.str().c_str());
+            std::cout << js.toStdString() << std::endl;
+            _ui
+                    ->webView
+                    ->page()
+                    ->mainFrame()
+                    ->evaluateJavaScript(js);
+        }
+
+        _ui
+                ->webView
+                ->page()
+                ->mainFrame()
+                ->evaluateJavaScript("centerMap()");
+
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
     }
 }

@@ -26,13 +26,13 @@
     }));
   }
 
-  function insertLine(line) {
+  function insertLine(line, color) {
     var flightPath = new google.maps.Polyline({
       path: line,
       geodesic: true,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1,
-      strokeWeight: 2
+      strokeColor: color || '#FF0000',
+      strokeOpacity: color ? 1 : 0.5,
+      strokeWeight: color ? 5 : 2
     });
 
     lines.push(flightPath);
@@ -42,6 +42,14 @@
   function centerMap() {
     map.setCenter(markers[0].getCenter());
     map.setZoom(20);
+  }
+
+  function clearLines() {
+    lines.forEach(function(line) {
+      line.setMap(null);
+    })
+
+    lines = [];
   }
 
   function initMap() {

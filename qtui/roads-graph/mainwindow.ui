@@ -49,6 +49,7 @@
    </attribute>
    <addaction name="actionZone_OSM"/>
    <addaction name="actionGraphML"/>
+   <addaction name="actionKruskal"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionZone_OSM">
@@ -65,6 +66,11 @@
    </property>
    <property name="toolTip">
     <string>Ouvrir fichier GraphML</string>
+   </property>
+  </action>
+  <action name="actionKruskal">
+   <property name="text">
+    <string>Kruskal</string>
    </property>
   </action>
  </widget>
