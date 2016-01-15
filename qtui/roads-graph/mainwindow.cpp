@@ -11,6 +11,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <sstream>
+#include <qdebug.h>
 
 #include <boost/graph/graphml.hpp>
 
@@ -62,19 +63,24 @@ void MainWindow::readGraphML()
 
     boost::read_graphml(xmlStrStream, graph, dynamicProps);
 
-//    auto vertices = boost::vertices(graph);
-//    for (auto it = vertices.first; it != vertices.second; it++) {
-//        auto pos = boost::get(boost::vertex_name, graph, *it);
-//        QMessageBox::warning(this, "pos", pos.c_str());
-//    }
+    std::cout << "Hello " << std::endl;
+    auto vertices = boost::vertices(graph);
 
+    std::cout << std::distance(vertices.first, vertices.second)
+              << " vertices read."
+              << std::endl;
+    for (auto it = vertices.first; it != vertices.second; it++) {
+        auto pos = boost::get(boost::vertex_name, graph, *it);
 
-    auto edges = boost::edges(graph);
-
-    std::cout << "count : " << std::distance(edges.first, edges.second) << std::endl;
-    for (auto it = edges.first; it != edges.second; it++) {
-        auto weight = boost::get(boost::edge_weight, graph, *it);
-        std::cout << weight << std::endl;
+        std::ostringstream jsOut;
+        jsOut << "insertMarker(" << pos << ")" << std::endl;
+        auto js = QString(jsOut.str().c_str());
+        std::cout << js.toStdString() << std::endl;
+        _ui
+            ->webView
+            ->page()
+            ->mainFrame()
+            ->evaluateJavaScript(js);
     }
 }
 
