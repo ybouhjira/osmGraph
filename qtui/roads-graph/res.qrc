@@ -2,4 +2,10 @@
     <qresource prefix="/files">
         <file>index.html</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>res/Road-512.png</file>
+        <file>res/Tree-512.png</file>
+        <file>res/xml.png</file>
+        <file>res/map.png</file>
+    </qresource>
 </RCC>

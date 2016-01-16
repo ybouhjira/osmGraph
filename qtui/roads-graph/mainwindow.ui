@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>490</width>
     <height>300</height>
    </rect>
   </property>
@@ -35,12 +35,18 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>490</width>
      <height>22</height>
     </rect>
    </property>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextBesideIcon</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -54,27 +60,43 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionZone_OSM">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/res/map.png</normaloff>:/icons/res/map.png</iconset>
+   </property>
    <property name="text">
-    <string>Zone OSM</string>
+    <string>Zone carte</string>
    </property>
    <property name="toolTip">
     <string>Créer un graphe à pratir du OSM d'une zone</string>
    </property>
   </action>
   <action name="actionGraphML">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/res/xml.png</normaloff>:/icons/res/xml.png</iconset>
+   </property>
    <property name="text">
-    <string>GraphML</string>
+    <string>Open GraphML</string>
    </property>
    <property name="toolTip">
     <string>Ouvrir fichier GraphML</string>
    </property>
   </action>
   <action name="actionKruskal">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/res/Tree-512.png</normaloff>:/icons/res/Tree-512.png</iconset>
+   </property>
    <property name="text">
-    <string>Kruskal</string>
+    <string>Minimum spanning Tree</string>
    </property>
   </action>
   <action name="actionDijkstra">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/res/Road-512.png</normaloff>:/icons/res/Road-512.png</iconset>
+   </property>
    <property name="text">
     <string>Dijkstra</string>
    </property>
@@ -88,6 +110,8 @@
    <header>QtWebKitWidgets/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>
