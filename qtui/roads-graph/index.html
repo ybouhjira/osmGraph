@@ -7,7 +7,7 @@
   </style>
 </head>
 <body>
-<div id="map"></div>
+<div id="map" style="font-size: 2em">Loading map ...</div>
 <script>
   var map;
   var markers = [];
@@ -22,7 +22,7 @@
       fillOpacity: 0.5,
       map: map,
       center: pos,
-      radius: 1.5
+      radius: 3
     }));
   }
 
@@ -43,9 +43,16 @@
     flightPath.setMap(map);
   }
 
+  /**
+   * Zoom map on the rectangle containing
+   * all the markers
+   */
   function centerMap() {
-    map.setCenter(markers[markers.length / 2].getCenter());
-    map.setZoom(9);
+    var bounds = new google.maps.LatLngBounds();
+    markers
+      .map(function(marker) { return marker.getCenter() })
+      .forEach(function(marker) { bounds.extend(marker) });
+    map.fitBounds(bounds);
   }
 
   function clearLines() {

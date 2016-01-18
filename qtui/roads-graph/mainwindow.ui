@@ -60,6 +60,9 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionZone_OSM">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/icons/res/map.png</normaloff>:/icons/res/map.png</iconset>
@@ -72,6 +75,9 @@
    </property>
   </action>
   <action name="actionGraphML">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/icons/res/xml.png</normaloff>:/icons/res/xml.png</iconset>
@@ -84,6 +90,9 @@
    </property>
   </action>
   <action name="actionKruskal">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/icons/res/Tree-512.png</normaloff>:/icons/res/Tree-512.png</iconset>
@@ -93,6 +102,9 @@
    </property>
   </action>
   <action name="actionDijkstra">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/icons/res/Road-512.png</normaloff>:/icons/res/Road-512.png</iconset>

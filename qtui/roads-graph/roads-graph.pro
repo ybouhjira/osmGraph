@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    osmdialog.cpp
+    osmdialog.cpp \
+    webpage.cpp
 
 HEADERS  += mainwindow.h \
-    osmdialog.h
+    osmdialog.h \
+    webpage.h
 
 FORMS    += mainwindow.ui \
     osmdialog.ui

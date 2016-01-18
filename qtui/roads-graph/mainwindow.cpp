@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "osmdialog.h"
+#include "webpage.h"
 
 #include <QFile>
 #include <QMessageBox>
@@ -24,13 +25,27 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui->setupUi(this);
     setCentralWidget(_ui->webView);
 
-    QFile html(":/files/index.html");
+    QFile htmlFile(":/files/index.html");
 
-    if (html.open(QIODevice::ReadOnly | QIODevice::Text))
-        _ui->webView->setHtml(html.readAll().toStdString().c_str());
-    else
-        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier");
+    if (htmlFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        auto page = new WebPage();
+        page->mainFrame()->setHtml(QString::fromUtf8(htmlFile.readAll()));
+        _ui->webView->setPage(page);
 
+        QMetaObject::Connection connection;
+        connection = connect(page, &QWebPage::loadFinished, [=]() {
+            _ui->actionGraphML->setEnabled(true);
+            _ui->actionDijkstra->setEnabled(true);
+            _ui->actionKruskal->setEnabled(true);
+            _ui->actionZone_OSM->setEnabled(true);
+            disconnect(connection);
+        });
+
+    } else {
+        QMessageBox::warning(this, "Error", "Coudln't open index.html");
+    }
+
+    // Connect Signals & slots
     connect(_ui->actionZone_OSM, &QAction::triggered,
             this, &MainWindow::showOsmDialog);
     connect(_ui->actionGraphML, &QAction::triggered,
@@ -217,10 +232,10 @@ void MainWindow::kruskal()
             auto js = QString(jsOut.str().c_str());
             std::cout << js.toStdString() << std::endl;
             _ui
-                ->webView
-                ->page()
-                ->mainFrame()
-                ->evaluateJavaScript(js);
+                    ->webView
+                    ->page()
+                    ->mainFrame()
+                    ->evaluateJavaScript(js);
         }
 
 
@@ -273,11 +288,6 @@ void MainWindow::dijkstra()
 {
     QMessageBox::warning(this, "dijkstra", "dijkstra");
     typedef int Weight;
-    //    typedef boost::property<boost::edge_weight_t, Weight> WeightProperty;
-    //    typedef boost::property<boost::vertex_name_t, std::string> NameProperty;
-    //    typedef boost::property<boost::vertex_index_t, int> IndexProperty;
-    //    typedef boost::adjacency_list < boost::listS, boost::vecS, boost::undirectedS,
-    //            NameProperty, WeightProperty > Graph;
 
     typedef boost::adjacency_list
             <boost::vecS, boost::vecS, boost::undirectedS,
@@ -286,9 +296,10 @@ void MainWindow::dijkstra()
 
     typedef boost::graph_traits < Graph >::vertex_descriptor Vertex;
     typedef boost::property_map < Graph, boost::vertex_index_t >::type IndexMap;
-//    typedef boost::property_map < Graph, boost::vertex_name_t >::type NameMap;
-    typedef boost::iterator_property_map < Vertex*, IndexMap, Vertex, Vertex& > PredecessorMap;
-    typedef boost::iterator_property_map < Weight*, IndexMap, Weight, Weight& > DistanceMap;
+    typedef boost::iterator_property_map < Vertex*, IndexMap, Vertex, Vertex& >
+            PredecessorMap;
+    typedef boost::iterator_property_map < Weight*, IndexMap, Weight, Weight& >
+            DistanceMap;
     Graph g;
 
     std::istringstream xmlStrStream(m_xml.toStdString());
@@ -302,32 +313,12 @@ void MainWindow::dijkstra()
     IndexMap indexMap = boost::get(boost::vertex_index, g);
     PredecessorMap predecessorMap(&predecessors[0], indexMap);
     DistanceMap distanceMap(&distances[0], indexMap);
-    // Compute shortest paths from v0 to all vertices, and store the output in predecessors and distances
-    // boost::dijkstra_shortest_paths(g, v0, boost::predecessor_map(predecessorMap).distance_map(distanceMap));
-    // This is exactly the same as the above line - it is the idea of "named parameters" - you can pass the
-    // prdecessor map and the distance map in any order.
     boost::dijkstra_shortest_paths(g,
                                    *(boost::vertices(g).first),
-                                   boost::distance_map(distanceMap).predecessor_map(predecessorMap));
+                                   boost::distance_map(distanceMap)
+                                   .predecessor_map(predecessorMap));
 
     std::cout << "distances and parents:" << std::endl;
-//    NameMap nameMap = boost::get(boost::vertex_name, g);
-
-//    boost::graph_traits < Graph >::vertex_iterator vi, vend;
-//    for (std::tie(vi, vend) = boost::vertices(g); vi != vend; ++vi) {
-//        std::cout << "distance(" << name[*vi] << ") = " << d[*vi] << ", ";
-//        std::cout << "parent(" << name[*vi] << ") = " << name[p[*vi]] << std::
-//                                                                         endl;
-//    }
-//    std::cout << std::endl;
-
-//    std::ofstream dot_file("figs/dijkstra-eg.dot");
-
-//    dot_file << "digraph D {\n"
-//             << "  rankdir=LR\n"
-//             << "  size=\"4,3\"\n"
-//             << "  ratio=\"fill\"\n"
-//             << "  edge[style=\"bold\"]\n" << "  node[shape=\"circle\"]\n";
 
     boost::graph_traits < Graph >::edge_iterator ei, ei_end;
     for (std::tie(ei, ei_end) = boost::edges(g); ei != ei_end; ++ei) {
@@ -356,9 +347,9 @@ void MainWindow::dijkstra()
         std::cout << "dijkstra " << js.toStdString() << std::endl;
 
         _ui
-            ->webView
-            ->page()
-            ->mainFrame()
-            ->evaluateJavaScript(js);
+                ->webView
+                ->page()
+                ->mainFrame()
+                ->evaluateJavaScript(js);
     }
 }
