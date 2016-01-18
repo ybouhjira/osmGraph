@@ -32,4 +32,4 @@ RESOURCES += \
 
 CONFIG += c++11
 
-LIBS += -lboost_system -lboost_graph
+LIBS += -lboost_system -lboost_graph -lssl

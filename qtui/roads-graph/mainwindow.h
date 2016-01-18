@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "webpage.h"
 
 namespace Ui {
     class MainWindow;
@@ -23,14 +24,16 @@ public:
 
     void kruskal();
     void dijkstra();
+
 public slots:
     void showOsmDialog();
     void openGraphMl();
-
+    void enableToolBar();
 
 private:
     Ui::MainWindow *_ui;
     QString m_xml;
+    WebPage *m_webPage;
 };
 
 #endif // MAINWINDOW_H

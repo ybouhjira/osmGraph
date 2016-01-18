@@ -18,9 +18,11 @@
 
 #include <boost/graph/graphml.hpp>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    _ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , _ui(new Ui::MainWindow)
+    , m_webPage(new WebPage(this))
+
 {
     _ui->setupUi(this);
     setCentralWidget(_ui->webView);
@@ -28,18 +30,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QFile htmlFile(":/files/index.html");
 
     if (htmlFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        auto page = new WebPage();
-        page->mainFrame()->setHtml(QString::fromUtf8(htmlFile.readAll()));
-        _ui->webView->setPage(page);
+        m_webPage
+                ->mainFrame()
+                ->setHtml(QString::fromUtf8(htmlFile.readAll()));
+        _ui->webView->setPage(m_webPage);
 
-        QMetaObject::Connection connection;
-        connection = connect(page, &QWebPage::loadFinished, [=]() {
-            _ui->actionGraphML->setEnabled(true);
-            _ui->actionDijkstra->setEnabled(true);
-            _ui->actionKruskal->setEnabled(true);
-            _ui->actionZone_OSM->setEnabled(true);
-            disconnect(connection);
-        });
+        connect(m_webPage, &QWebPage::loadFinished,
+                this, &MainWindow::enableToolBar);
 
     } else {
         QMessageBox::warning(this, "Error", "Coudln't open index.html");
@@ -194,6 +191,14 @@ void MainWindow::openGraphMl()
     } else {
         QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier");
     }
+}
+
+void MainWindow::enableToolBar()
+{
+    _ui->actionGraphML->setEnabled(true);
+    _ui->actionDijkstra->setEnabled(true);
+    _ui->actionKruskal->setEnabled(true);
+    _ui->actionZone_OSM->setEnabled(true);
 }
 
 void MainWindow::kruskal()
