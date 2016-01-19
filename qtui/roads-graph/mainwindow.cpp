@@ -21,8 +21,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , _ui(new Ui::MainWindow)
-    , m_webPage(new WebPage(this))
-
 {
     _ui->setupUi(this);
     setCentralWidget(_ui->webView);
@@ -30,12 +28,17 @@ MainWindow::MainWindow(QWidget *parent)
     QFile htmlFile(":/files/index.html");
 
     if (htmlFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        m_webPage
+        //auto webPage = new QWebPage(_ui->webView);
+        _ui->webView
+                ->page()
                 ->mainFrame()
                 ->setHtml(QString::fromUtf8(htmlFile.readAll()));
-        _ui->webView->setPage(m_webPage);
+        //_ui->webView->setPage(webPage);
 
-        connect(m_webPage, &QWebPage::loadFinished,
+//        connect(webPage, &QWebPage::loadFinished,
+//                this, &MainWindow::enableToolBar);
+
+        connect(_ui->webView, &QWebView::loadFinished,
                 this, &MainWindow::enableToolBar);
 
     } else {
@@ -333,7 +336,7 @@ void MainWindow::dijkstra()
                 v = boost::target(e, g);
 
         auto sourcePos = boost::get(boost::vertex_name, g, u);
-        auto targetPos = boost::get(boost::vertex_name, g, u);
+        auto targetPos = boost::get(boost::vertex_name, g, v);
 
         auto sourceLatLng = coords_from_string(sourcePos);
         auto targetLatLng = coords_from_string(targetPos);

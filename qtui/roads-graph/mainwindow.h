@@ -33,7 +33,6 @@ public slots:
 private:
     Ui::MainWindow *_ui;
     QString m_xml;
-    WebPage *m_webPage;
 };
 
 #endif // MAINWINDOW_H
