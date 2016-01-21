@@ -13,26 +13,31 @@
   var markers = [];
   var lines = [];
 
-  function insertMarker(pos) {
+  function insertMarker(opts) {
+    var color = opts.color || '#EF5350';
+    var opacity = opts.opacity || 0.6;
+    var pos = opts.pos || pos;
+    var weight = opts.weight || 1
+
     markers.push(new google.maps.Circle({
-      strokeColor: '#EF5350',
+      strokeColor: color,
       strokeOpacity: 1,
-      strokeWeight: 1,
-      fillColor: '#EF5350',
-      fillOpacity: 0.5,
+      strokeWeight: weight,
+      fillColor: color,
+      fillOpacity: opacity,
       map: map,
       center: pos,
       radius: 3
     }));
   }
 
-  function insertLine(line, color, weight, opacity) {
-    var color = color || 'red';
-    var weight = weight || 2;
-    var opacity = opacity || 0.6;
+  function insertLine(opts) {
+    var color = opts.color || 'red';
+    var weight = opts.weight || 2;
+    var opacity = opts.opacity || 0.6;
 
     var flightPath = new google.maps.Polyline({
-      path: line,
+      path: opts.line,
       geodesic: true,
       strokeColor: color || '#E57373',
       strokeOpacity: opacity,

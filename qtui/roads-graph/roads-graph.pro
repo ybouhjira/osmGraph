@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     osmdialog.cpp \
-    webpage.cpp
+    webpage.cpp \
+    googlemaps.cpp
 
 HEADERS  += mainwindow.h \
     osmdialog.h \
-    webpage.h
+    webpage.h \
+    googlemaps.h
 
 FORMS    += mainwindow.ui \
     osmdialog.ui
@@ -30,6 +32,6 @@ DISTFILES += \
 RESOURCES += \
     res.qrc
 
-CONFIG += c++11
+CONFIG += c++14
 
 LIBS += -lboost_system -lboost_graph -lssl
