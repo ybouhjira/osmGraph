@@ -208,6 +208,7 @@ void MainWindow::kruskal()
 
 void MainWindow::dijkstra()
 {
+    // TODO :
     //    typedef int Weight;
 
     //    // TODO : move from here

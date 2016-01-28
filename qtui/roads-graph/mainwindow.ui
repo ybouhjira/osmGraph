@@ -68,7 +68,7 @@
      <normaloff>:/icons/res/map.png</normaloff>:/icons/res/map.png</iconset>
    </property>
    <property name="text">
-    <string>Zone carte</string>
+    <string>Map zone</string>
    </property>
    <property name="toolTip">
     <string>Créer un graphe à pratir du OSM d'une zone</string>

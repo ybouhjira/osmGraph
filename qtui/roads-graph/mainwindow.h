@@ -12,7 +12,7 @@ namespace Ui {
 }
 
 typedef boost::adjacency_list
-        <boost::vecS, boost::vecS, boost::undirectedS,
+        <boost::vecS, boost::vecS, boost::directedS,
         boost::property<boost::vertex_name_t, std::string>,
         boost::property <boost::edge_weight_t, double>> Graph;
 
