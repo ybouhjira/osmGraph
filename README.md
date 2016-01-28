@@ -1,5 +1,14 @@
-# Road graph explorer
-A tool to calculate the shortest path in a road graph
-given rectangle on the map
+# OsmGraph
 
 ![server.png](https://bitbucket.org/repo/LELEEB/images/2605373484-server.png)
+
+## Features
+ - `.osm` to `.graphml`
+ - Minimum spanning tree (using Kruskal)
+ 
+## Using
+ - Boost
+ - Google Maps JavaScript API
+ - Qt
+ - Python
+
